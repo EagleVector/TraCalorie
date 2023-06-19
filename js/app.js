@@ -1,7 +1,7 @@
 class CalorieTracker {
   constructor() {
-    this._calorieLimit = 1800;
-    this._totalCalories = 0;
+    this._calorieLimit = Storage.getCalorieLimit();
+    this._totalCalories = Storage.getTotalCalories(0);
     this._meals = [];
     this._workouts = [];
 
@@ -18,6 +18,7 @@ class CalorieTracker {
   addMeal(meal) {
     this._meals.push(meal);
     this._totalCalories += meal.calories;
+    Storage.updateTotalcalories(this._totalCalories);
     this._displayNewMeal(meal);
     this._render();
   }
@@ -25,6 +26,7 @@ class CalorieTracker {
   addWorkout(workout) {
     this._workouts.push(workout);
     this._totalCalories -= workout.calories;
+    Storage.updateTotalcalories(this._totalCalories);
     this._displayNewWorkout(workout);
     this._render();
   }
@@ -35,6 +37,7 @@ class CalorieTracker {
     if (index !== -1) {
       const meal = this._meals[index];
       this._totalCalories -= meal.calories;
+      Storage.updateTotalcalories(this._totalCalories);
       this._meals.splice(index, 1);
       this._render();
     }
@@ -46,6 +49,7 @@ class CalorieTracker {
     if (index !== -1) {
       const workout = this._workouts[index];
       this._totalCalories += workout.calories;
+      Storage.updateTotalcalories(this._totalCalories);
       this._workouts.splice(index, 1);
       this._render();
     }
@@ -60,6 +64,7 @@ class CalorieTracker {
 
   setLimit(calorieLimit) {
     this._calorieLimit = calorieLimit;
+    Storage.setCalorieLimit(calorieLimit);
     this._displayCaloriesLimit();
     this._render();
   }
@@ -212,6 +217,35 @@ class Workout {
 
 // Storage Class
 
+class Storage {
+  static getCalorieLimit(defaultLimit = 2000) {
+    let calorieLimit;
+    if (localStorage.getItem('calorieLimit') === null) {
+      calorieLimit = defaultLimit;
+    } else {
+      calorieLimit = +localStorage.getItem('calorieLimit'); 
+    }
+    return calorieLimit;
+  }
+
+  static setCalorieLimit(calorieLimit) {
+    localStorage.setItem('calorieLimit', calorieLimit);
+  }
+
+  static getTotalCalories(defaultCalories = 0) {
+    let totalCalories;
+    if (localStorage.getItem('totalCalories') === null) {
+      totalCalories = defaultCalories;
+    } else {
+      totalCalories = +localStorage.getItem('totalCalories'); 
+    }
+    return totalCalories;
+  }
+
+  static updateTotalcalories(calories) {
+    localStorage.setItem('totalCalories', calories);
+  }
+}
 
 // Initializer Class
 // Adding event listeners to the Application
