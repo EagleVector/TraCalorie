@@ -210,7 +210,11 @@ class Workout {
 // console.log(tracker._workouts);
 // console.log(tracker._totalCalories);
 
-// Adding event listenersto the Application
+// Storage Class
+
+
+// Initializer Class
+// Adding event listeners to the Application
 
 class App {
   constructor() {
